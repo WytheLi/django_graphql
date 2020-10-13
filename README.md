@@ -92,6 +92,17 @@ mutation {
 
 我们将redis用作channel layer的后备存储
 
+3、确保channel layer可以与Redis通信。打开Django shell并运行以下命令：
+python manage.py shell
+```
+>>> import channels.layers
+>>> channel_layer = channels.layers.get_channel_layer()
+>>> from asgiref.sync import async_to_sync
+>>> async_to_sync(channel_layer.send)('test_channel', {'type': 'hello'})
+>>> async_to_sync(channel_layer.receive)('test_channel')
+{'type': 'hello'}
+```
+
 
 ### 参考
 - [Django使用GraphQL详解](https://blog.csdn.net/ns2250225/article/details/79348914)

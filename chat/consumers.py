@@ -1,6 +1,8 @@
 import json
 
+from channels.consumer import AsyncConsumer, SyncConsumer
 # async_to_sync()包装器，使得同步的WebsocketConsumer能调用异步的channel layer(通道层)方法
+# 它可以将任何异步协程调用转换为可同步调用
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 
