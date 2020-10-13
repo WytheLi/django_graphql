@@ -82,6 +82,16 @@ mutation {
 }
 ```
 
+### 聊天室
+1、ASGI/Channels
+
+2、channels_redis
+启动channel layer（频道层/通道层)，channel layer是一种通信系统。
+
+例如：在我们的聊天应用程序中，我们希望ChatConsumer同一房间中的多个实例彼此通信。为此，我们将让每个ChatConsumer将其频道添加到名称基于房间名称的组中。这样，ChatConsumers可以将消息传输到同一房间中的所有其他ChatConsumers
+
+我们将redis用作channel layer的后备存储
+
 
 ### 参考
 - [Django使用GraphQL详解](https://blog.csdn.net/ns2250225/article/details/79348914)
