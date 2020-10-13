@@ -97,3 +97,5 @@ mutation {
 - [Django使用GraphQL详解](https://blog.csdn.net/ns2250225/article/details/79348914)
 - [graphene-django](https://www.howtographql.com/graphql-python/0-introduction/)
 - [Insomnia客户端 -- REST和GraphQL API调试](https://insomnia.rest/download/)
+- [channels官方文档 & 实现聊天服务器demo](https://channels.readthedocs.io/en/latest/)
+- [\_\_call__()。该方法的功能类似于在类中重载 () 运算符，使得类实例对象可以像调用普通函数那样，以“对象名()”的形式使用](http://c.biancheng.net/view/2380.html)

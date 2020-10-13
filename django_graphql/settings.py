@@ -82,6 +82,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'TEST': {   # 使用sqlite3进行测试，它作为内存数据库运行，因此测试将无法正确运行。告诉我们的项目，sqlite3数据库不需要在内存中运行测试
+            'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
+        }
     }
 }
 
