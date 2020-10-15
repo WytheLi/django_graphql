@@ -1,3 +1,6 @@
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from django.http import JsonResponse
 from django.shortcuts import render
 
 # Create your views here.
@@ -12,3 +15,7 @@ def room(request, room_name):
     return render(request, 'chat/room.html', {
         'room_name': room_name
     })
+
+
+def beatserver(request):
+    return render(request, 'beatserver.html')

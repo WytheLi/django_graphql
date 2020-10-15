@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stream</title>
+</head>
+<body>
+  <script>
+    var socket = new WebSocket('ws://' + window.location.host +'/stream/');
+    socket.onmessage = function(e) {console.log(e)};
+  </script>
+</body>
+</html>

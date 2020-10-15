@@ -1,4 +1,6 @@
+import asyncio
 import json
+import time
 
 from channels.consumer import AsyncConsumer, SyncConsumer
 # async_to_sync()包装器，使得同步的WebsocketConsumer能调用异步的channel layer(通道层)方法
@@ -74,3 +76,62 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': message
         }))
+
+
+class PrintConsumer(SyncConsumer):
+    def test_print(self, message):
+        async_to_sync(self.channel_layer.group_send)(
+            "stream",
+            {
+                "type": "stream.message",
+                "message": message
+            }
+        )
+
+
+class StreamConsumer(WebsocketConsumer):
+    def connect(self):
+        print('Stream Connect...')
+        self.room_group_name = 'stream'
+
+        # join room_group
+        async_to_sync(self.channel_layer.group_add)(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        self.accept()
+
+    def disconnect(self, code):
+        pass
+
+    def receive(self, text_data=None, bytes_data=None):
+        # receive json data, example {"message": "hello websocket!"}
+        text_data_json = json.loads(text_data)
+        message = text_data_json['message']
+
+        # 及时应答客户端
+        self.send(text_data=json.dumps({
+            "data": {
+                "receive": message,
+                "status": 200,
+                "message": message.replace(' ', '--')
+            }
+        }))
+
+        # Send message to room_group
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                "type": "stream_message",
+                "message": message
+            }
+        )
+
+    # Receive message from room_group
+    def stream_message(self, event):
+        message = event['message']
+        print(event['type'])
+
+        # Send message to websocket
+        self.send(text_data=json.dumps({"data": message}))

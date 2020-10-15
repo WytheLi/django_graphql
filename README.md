@@ -103,6 +103,100 @@ python manage.py shell
 {'type': 'hello'}
 ```
 
+### 服务器配置
+1. 项目下添加 asgi.py 文件
+2. 安装daphne：`pip install daphne`
+3. 运行项目：`daphne -b 0.0.0.0 -p 8001 django_graphql.asgi:application`
+4. nginx配置
+```
+upstream channels-backend {
+    server localhost:8000;
+}
+# ...
+server {
+    # ...
+    location / {
+        try_files $uri @proxy_to_app;
+    }
+    # ...
+    location @proxy_to_app {
+        proxy_pass http://channels-backend;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host $server_name;
+    }
+    # ...
+}
+```
+5. supervisor启动daphne
+
+5.1 安装supervisor
+```
+pip install supervisor
+```
+
+5.2 生成配置文件
+```
+>>> mkdir Supervisor
+>>> cd Supervisor/
+>>> echo_supervisord_conf > supervisord.conf
+>>> ls
+supervisord.conf
+>>> cat supervisord.conf 
+```
+
+5.3 添加启动配置
+```
+>>> vim daphne.ini
+# 加入下面的内容
+
+[program:daphne]
+directory=/home/user/ITNest
+command=daphne -b 127.0.0.1 -p 8001 --proxy-headers ITNest.asgi:application
+autostart=true
+autorestart=true
+stdout_logfile=/tmp/websocket.log
+redirect_stderr=true
+```
+
+5.4 修改supervisor配置文件
+```
+>>> vim supervisord.conf 
+
+# 最后加上
+[include]
+;files = relative/directory/*.ini
+files = /home/user/ITNest/Supervisor/*.ini
+```
+
+5.5 启动supervisord
+```
+>>> supervisord -c supervisord.conf 
+
+>>> tail /tmp/websocket.log 
+```
+
+重启
+```
+>>> supervisorctl -c supervisord.conf restart
+Error: restart requires a process name
+restart <name>      Restart a process
+restart <gname>:*   Restart all processes in a group
+restart <name> <name>   Restart multiple processes or groups
+restart all     Restart all processes
+Note: restart does not reread config files. For that, see reread and update.
+>>> supervisorctl -c Supervisor/supervisord.conf restart all
+daphne: stopped
+daphne: started
+```
+
 
 ### 参考
 - [Django使用GraphQL详解](https://blog.csdn.net/ns2250225/article/details/79348914)
@@ -110,3 +204,5 @@ python manage.py shell
 - [Insomnia客户端 -- REST和GraphQL API调试](https://insomnia.rest/download/)
 - [channels官方文档 & 实现聊天服务器demo](https://channels.readthedocs.io/en/latest/)
 - [\_\_call__()。该方法的功能类似于在类中重载 () 运算符，使得类实例对象可以像调用普通函数那样，以“对象名()”的形式使用](http://c.biancheng.net/view/2380.html)
+- [Django使用Channels实现WebSocket消息通知功能](https://www.jianshu.com/p/0f75e2623418)
+- [beatserver ](https://github.com/rajasimon/beatserver/)
