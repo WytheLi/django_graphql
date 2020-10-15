@@ -1,0 +1,6 @@
+# Editor directories and files
+.idea
+__pycache__/*
+chat/__pycache__/*
+chat/templatetags/__pycache__/*
+django_graphql/__pycache__/*
