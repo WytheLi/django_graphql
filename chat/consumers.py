@@ -80,11 +80,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 class PrintConsumer(SyncConsumer):
     def test_print(self, message):
+        # 接受来自beatserver的数据, 将消息发送到channel layer组
         async_to_sync(self.channel_layer.group_send)(
-            "stream",
+            message['message']['group'],
             {
                 "type": "stream.message",
-                "message": message
+                "message": message['message']['pushData']
             }
         )
 
@@ -92,7 +93,7 @@ class PrintConsumer(SyncConsumer):
 class StreamConsumer(WebsocketConsumer):
     def connect(self):
         print('Stream Connect...')
-        self.room_group_name = 'stream'
+        self.room_group_name = self.scope['url_route']['kwargs'].get('group_name', None)
 
         # join room_group
         async_to_sync(self.channel_layer.group_add)(
