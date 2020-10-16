@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'beatserver',
     'book',
     'chat',
+    'blog',
+    'account',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +155,7 @@ CHANNEL_LAYERS = {
         }
     }
 }
+
+
+# 指定用户模型为 重载的用户类
+AUTH_USER_MODEL = 'account.User'

@@ -21,6 +21,7 @@ python manage.py shell
 ### 三、对象操作
 1. 创建记录
 ```
+# 这里两个createBook -- 都是总的Schema的mutations入口中的create_book类属性驼峰化
 mutation createBook {
   createBook(bookData: {title:"django-graphgl2", author: "ns2250225"}) {
     book {
@@ -197,12 +198,48 @@ daphne: stopped
 daphne: started
 ```
 
+### channel layer理解
+1.channel layer能创建多个队列
+2.ws连接时，连接对象与指定group_name的队列绑定
+3.接受消息，将消息放入该队列
+4.然后从该队列中取消息发送
+
+### django manage.py脚本
+```
+python manage.py startproject projectname    # 新建Django project
+
+python manage.py startapp appname  
+           # 新建 app
+python manage.py runserver 0.0.0.0:8000        # 监听所有可用 ip
+
+# 创建更改的文件
+python manage.py makemigrations
+# 将生成的py文件应用到数据库
+python manage.py migrate
+
+python manage.py createsuperuser               # 创建超级管理员
+
+python manage.py flush　　　　　　　　　　　　　　  # 清空数据库
+
+python manage.py dbshell            　　　　     # 数据库命令行
+
+python manage.py shell            　　　　     # django交互命令行
+
+python manage.py dumpdata appname > appname.json    # 导出数据
+python manage.py loaddata appname.json  　　　　　　  # 导入数据
+
+python manage.py 　　　　#可以看到详细的列表，在忘记了名称的时候特别有用
+```
+
 
 ### 参考
-- [Django使用GraphQL详解](https://blog.csdn.net/ns2250225/article/details/79348914)
+- [GraphQL文档](https://graphql.cn/learn/)
+- [Graphene-Django官方文档](https://docs.graphene-python.org/projects/django/en/latest/)
+- [Django使用GraphQL详解 -- DEMO](https://blog.csdn.net/ns2250225/article/details/79348914)
+- [django使用graphql -- DEMO](https://blog.csdn.net/kuangshp128/article/details/79370351)
 - [graphene-django](https://www.howtographql.com/graphql-python/0-introduction/)
 - [Insomnia客户端 -- REST和GraphQL API调试](https://insomnia.rest/download/)
 - [channels官方文档 & 实现聊天服务器demo](https://channels.readthedocs.io/en/latest/)
 - [\_\_call__()。该方法的功能类似于在类中重载 () 运算符，使得类实例对象可以像调用普通函数那样，以“对象名()”的形式使用](http://c.biancheng.net/view/2380.html)
 - [Django使用Channels实现WebSocket消息通知功能](https://www.jianshu.com/p/0f75e2623418)
-- [beatserver ](https://github.com/rajasimon/beatserver/)
+- [beatserver -- websocket定时推送 ](https://github.com/rajasimon/beatserver/)

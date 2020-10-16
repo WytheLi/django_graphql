@@ -95,7 +95,7 @@ class StreamConsumer(WebsocketConsumer):
         print('Stream Connect...')
         self.room_group_name = self.scope['url_route']['kwargs'].get('group_name', None)
 
-        # join room_group
+        # join room_group，将ws连接与channel layer指定组映射
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
             self.channel_name
