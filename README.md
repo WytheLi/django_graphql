@@ -104,6 +104,28 @@ python manage.py shell
 {'type': 'hello'}
 ```
 
+
+### channel layer理解
+1.channel layer能创建多个队列
+
+2.ws连接时，连接对象与指定group_name的队列绑定
+
+3.接受消息，将消息放入该队列
+
+4. 放入队列中的消息，被监听的ws连接消耗
+
+
+### beatserver定时推送理解
+1. 将消息投递给调度器
+
+2. 调度器分配给指定channel(demo中channel是testing-print)，以及对应的处理函数
+
+3. 将消息加入指定的通道层中\[channel_layer.group_send()]
+
+4. 当ws连接对象与该channel_layer为连接状态时，队列中的消息会按照指定的调度规则被消耗
+
+
+
 ### 服务器配置
 1. 项目下添加 asgi.py 文件
 2. 安装daphne：`pip install daphne`
@@ -198,11 +220,6 @@ daphne: stopped
 daphne: started
 ```
 
-### channel layer理解
-1.channel layer能创建多个队列
-2.ws连接时，连接对象与指定group_name的队列绑定
-3.接受消息，将消息放入该队列
-4.然后从该队列中取消息发送
 
 ### django manage.py脚本
 ```
